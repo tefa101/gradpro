@@ -129,11 +129,12 @@ plt.boxplot(bank_csv['campaign'])
 ax.set_title('campaign')
 
 plt.show()
-#allfigs.savefig(ax.figure)
+allfigs.savefig(ax.figure)
 
 
 
 allfigs.close()
+#closing of the pdf
 
 
 #Now that we have removed outliers, we can proceed for more feature engineering techniques.
