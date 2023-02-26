@@ -32,7 +32,7 @@ path = 'C:\\Users\\mosta\\Downloads\\mycodelap\\gradpro\\bank-additional-full.cs
 bank_csv = pd.read_csv( path, sep = ';')
 
 #figures list 
-#allfigs = PdfPages('allplots2.pdf')
+allfigs = PdfPages('allplots2.pdf')
 
 #reshape the conversion attribute to zeros and ones 
 # 1 ---> converted 
@@ -66,7 +66,7 @@ ax = conversion_by_age_group.plot(title='conversion for age groups' , kind='bar'
 plt.xlabel('age group')
 plt.ylabel('conversion %')
 plt.show()
-#allfigs.savefig(ax.figure)
+allfigs.savefig(ax.figure)
 
 
 #then grouped by age and marital ()
@@ -82,7 +82,7 @@ ax = age_marital_df.plot(title='age - marital conversion rates' , kind= 'bar' )
 plt.xlabel('age groups')
 plt.ylabel('conversion')
 plt.show()
-#allfigs.savefig(ax.figure)
+allfigs.savefig(ax.figure)
 
 #------------------------------------------------------
 
@@ -100,7 +100,7 @@ plt.boxplot(bank_csv['campaign'])
 ax.set_title('campaign')
 
 plt.show()
-#allfigs.savefig(ax.figure)
+allfigs.savefig(ax.figure)
 
 ##remove the outliars
 
@@ -133,7 +133,7 @@ plt.show()
 
 
 
-#allfigs.close()
+allfigs.close()
 
 
 #Now that we have removed outliers, we can proceed for more feature engineering techniques.
@@ -179,19 +179,21 @@ ordinal_labels2
 bank_features['marital_ordinal']=bank_features['marital'].map(ordinal_labels2)
 bank_features.drop(['marital'], axis=1,inplace=True)
 
+bank_features.to_csv('C:\\Users\\mosta\\Downloads\\mycodelap' , index=False)
+
 #-----------------------------------------
 #scaling the features 
 
 bank_scale=bank_features.copy()
-Categorical_variables=['job', 'education', 'default', 'housing', 'loan', 'month',
-       'day_of_week','y', 'dummy_telephone', 'dummy_nonexistent',
-       'dummy_success', 'marital_ordinal']
+Categorical_variables=['job', 'education', 'default', 'housing', 'loan', 'month','day_of_week','y', 'marital_ordinal']
 
 
 feature_scale=[feature for feature in bank_scale.columns if feature not in Categorical_variables]
+print(bank_scale.head())
 
-features = ['job', 'education', 'default', 'housing', 'loan', 'month','day_of_week','y', 'dummy_telephone', 'dummy_nonexistent','dummy_success', 'marital_ordinal']
-scaler=StandardScaler()
-scaler.fit(bank_scale[feature_scale])
-scaled_data = pd.concat([bank_scale[features].reset_index(drop=True),pd.DataFrame(scaler.transform(bank_scale[feature_scale]), columns=feature_scale)],axis=1)
-print(scaled_data.head())
+
+# features = ['job', 'education', 'default', 'housing', 'loan', 'month','day_of_week','y', 'marital_ordinal']
+# scaler=StandardScaler()
+# scaler.fit(bank_scale[feature_scale])
+# scaled_data = pd.concat([bank_scale[features].reset_index(drop=True),pd.DataFrame(scaler.transform(bank_scale[feature_scale]), columns=feature_scale)],axis=1)
+# print(scaled_data.head())
