@@ -5,12 +5,34 @@ import seaborn as sns
 import matplotlib.pyplot as plt 
 from matplotlib.backends.backend_pdf import PdfPages
 
+from sklearn.svm import SVC
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.pipeline import make_pipeline
+from sklearn.model_selection import GridSearchCV
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.naive_bayes import BernoulliNB 
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import train_test_split
+
+#Metrics Phase
+from sklearn import metrics
+from sklearn.metrics import classification_report
+from sklearn.model_selection import cross_val_score
+
+
 #readin data 
 path = 'C:\\Users\\mosta\\Downloads\\mycodelap\\gradpro\\bank-additional-full.csv'
 bank_csv = pd.read_csv( path, sep = ';')
 
 #figures list 
-allfigs = PdfPages('allplots2.pdf')
+#allfigs = PdfPages('allplots2.pdf')
 
 #reshape the conversion attribute to zeros and ones 
 # 1 ---> converted 
@@ -44,7 +66,7 @@ ax = conversion_by_age_group.plot(title='conversion for age groups' , kind='bar'
 plt.xlabel('age group')
 plt.ylabel('conversion %')
 plt.show()
-allfigs.savefig(ax.figure)
+#allfigs.savefig(ax.figure)
 
 
 #then grouped by age and marital ()
@@ -60,7 +82,7 @@ ax = age_marital_df.plot(title='age - marital conversion rates' , kind= 'bar' )
 plt.xlabel('age groups')
 plt.ylabel('conversion')
 plt.show()
-allfigs.savefig(ax.figure)
+#allfigs.savefig(ax.figure)
 
 #------------------------------------------------------
 
@@ -78,7 +100,7 @@ plt.boxplot(bank_csv['campaign'])
 ax.set_title('campaign')
 
 plt.show()
-allfigs.savefig(ax.figure)
+#allfigs.savefig(ax.figure)
 
 ##remove the outliars
 
@@ -107,8 +129,69 @@ plt.boxplot(bank_csv['campaign'])
 ax.set_title('campaign')
 
 plt.show()
-allfigs.savefig(ax.figure)
+#allfigs.savefig(ax.figure)
 
 
 
-allfigs.close()
+#allfigs.close()
+
+
+#Now that we have removed outliers, we can proceed for more feature engineering techniques.
+
+bank_features = bank_csv.copy()
+#encoding education 
+lst=['basic.9y','basic.6y','basic.4y']
+for i in lst:
+    bank_features.loc[bank_features['education'] == i, 'education'] = "middle.school"
+
+print(bank_features['education'].value_counts())
+
+
+
+
+#encoding months and days to numbers 
+month_dict={'may':5,'jul':7,'aug':8,'jun':6,'nov':11,'apr':4,'oct':10,'sep':9,'mar':3,'dec':12}
+bank_features['month']= bank_features['month'].map(month_dict)
+
+day_dict={'thu':5,'mon':2,'wed':4,'tue':3,'fri':6}
+bank_features['day_of_week']= bank_features['day_of_week'].map(day_dict) 
+
+#encoding the features that has yes and no values
+
+dictionary={'yes':1,'no':0,'unknown':-1}
+bank_features['housing']=bank_features['housing'].map(dictionary)
+bank_features['default']=bank_features['default'].map(dictionary)
+bank_features['loan']=bank_features['loan'].map(dictionary)
+
+dictionary1={'no':0,'yes':1}
+bank_features['y']=bank_features['y'].map(dictionary1)
+
+print(bank_features.loc[:,['housing','default','loan','y']].head())
+
+#the marital feature 
+
+ordinal_labels=bank_features.groupby(['marital'])['y'].mean().sort_values().index
+print(ordinal_labels)
+
+ordinal_labels2={k:i for i,k in enumerate(ordinal_labels,0)}
+ordinal_labels2
+#drop marital and add marital_ordinal column 
+bank_features['marital_ordinal']=bank_features['marital'].map(ordinal_labels2)
+bank_features.drop(['marital'], axis=1,inplace=True)
+
+#-----------------------------------------
+#scaling the features 
+
+bank_scale=bank_features.copy()
+Categorical_variables=['job', 'education', 'default', 'housing', 'loan', 'month',
+       'day_of_week','y', 'dummy_telephone', 'dummy_nonexistent',
+       'dummy_success', 'marital_ordinal']
+
+
+feature_scale=[feature for feature in bank_scale.columns if feature not in Categorical_variables]
+
+features = ['job', 'education', 'default', 'housing', 'loan', 'month','day_of_week','y', 'dummy_telephone', 'dummy_nonexistent','dummy_success', 'marital_ordinal']
+scaler=StandardScaler()
+scaler.fit(bank_scale[feature_scale])
+scaled_data = pd.concat([bank_scale[features].reset_index(drop=True),pd.DataFrame(scaler.transform(bank_scale[feature_scale]), columns=feature_scale)],axis=1)
+print(scaled_data.head())
