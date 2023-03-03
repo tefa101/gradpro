@@ -180,7 +180,10 @@ ordinal_labels2
 bank_features['marital_ordinal']=bank_features['marital'].map(ordinal_labels2)
 bank_features.drop(['marital'], axis=1,inplace=True)
 
-bank_features.to_csv('C:\\Users\\mosta\\Downloads\\mycodelap' , index=False)
+#bank_features.to_csv('C:\\Users\\mosta\\Downloads\\mycodelap' , index=False)
+print(bank_features.head())
+
+#we need to encode (jop , education , contact )
 
 #-----------------------------------------
 #scaling the features 
@@ -198,3 +201,5 @@ print(bank_scale.head())
 # scaler.fit(bank_scale[feature_scale])
 # scaled_data = pd.concat([bank_scale[features].reset_index(drop=True),pd.DataFrame(scaler.transform(bank_scale[feature_scale]), columns=feature_scale)],axis=1)
 # print(scaled_data.head())
+
+
