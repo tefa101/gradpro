@@ -181,7 +181,19 @@ bank_features['marital_ordinal']=bank_features['marital'].map(ordinal_labels2)
 bank_features.drop(['marital'], axis=1,inplace=True)
 
 #bank_features.to_csv('C:\\Users\\mosta\\Downloads\\mycodelap' , index=False)
+print('bank feature head data frame')
 print(bank_features.head())
+print('bank feature columns')
+print(bank_features.columns)
+
+#---------------------------------------------------------
+#saving a copy of bank features after the edits in a csv file 
+path = 'C:\\Users\\mosta\\Downloads\\mycodelap\\bank_features.csv'
+bank_features.to_csv(path , encoding='UTF-8', index=False )
+
+
+
+#---------------------------------------------------------
 
 #we need to encode (jop , education , contact )
 
@@ -189,6 +201,7 @@ print(bank_features.head())
 #scaling the features 
 
 bank_scale=bank_features.copy()
+
 Categorical_variables=['job', 'education', 'default', 'housing', 'loan', 'month','day_of_week','y', 'marital_ordinal']
 
 
