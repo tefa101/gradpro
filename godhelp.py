@@ -145,7 +145,7 @@ lst=['basic.9y','basic.6y','basic.4y']
 for i in lst:
     bank_features.loc[bank_features['education'] == i, 'education'] = "middle.school"
 
-print(bank_features['education'].value_counts())
+print('education value counts \n' , bank_features['education'].value_counts())
 
 
 
@@ -170,7 +170,6 @@ bank_features['y']=bank_features['y'].map(dictionary1)
 print(bank_features.loc[:,['housing','default','loan','y']].head())
 
 #the marital feature 
-
 ordinal_labels=bank_features.groupby(['marital'])['y'].mean().sort_values().index
 print(ordinal_labels)
 
@@ -181,6 +180,9 @@ bank_features['marital_ordinal']=bank_features['marital'].map(ordinal_labels2)
 bank_features.drop(['marital'], axis=1,inplace=True)
 
 #bank_features.to_csv('C:\\Users\\mosta\\Downloads\\mycodelap' , index=False)
+print(bank_features.head())
+
+#bank_features.to_csv('C:\\Users\\mosta\\Downloads\\mycodelap' , index=False)
 print('bank feature head data frame')
 print(bank_features.head())
 print('bank feature columns')
@@ -188,8 +190,8 @@ print(bank_features.columns)
 
 #---------------------------------------------------------
 #saving a copy of bank features after the edits in a csv file 
-path = 'C:\\Users\\mosta\\Downloads\\mycodelap\\bank_features.csv'
-bank_features.to_csv(path , encoding='UTF-8', index=False )
+# path = 'C:\\Users\\mosta\\Downloads\\mycodelap\\bank_features.csv'
+# bank_features.to_csv(path , encoding='UTF-8', index=False )
 
 
 
