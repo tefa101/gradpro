@@ -83,6 +83,13 @@ plt.xlabel('age groups')
 plt.ylabel('conversion')
 plt.show()
 allfigs.savefig(ax.figure)
+#------------------------------------------------------
+#Correlation plot of attributes
+
+f,ax=plt.subplots(figsize=(10,10))
+ax.set_title('Correlation plot of attributes')
+sns.heatmap(bank_csv.corr(),annot=True,linewidths=0.5,linecolor="black",fmt=".1f",ax=ax)
+plt.show()
 
 #------------------------------------------------------
 
@@ -174,7 +181,7 @@ ordinal_labels=bank_features.groupby(['marital'])['y'].mean().sort_values().inde
 print(ordinal_labels)
 
 ordinal_labels2={k:i for i,k in enumerate(ordinal_labels,0)}
-ordinal_labels2
+print(ordinal_labels2)
 #drop marital and add marital_ordinal column 
 bank_features['marital_ordinal']=bank_features['marital'].map(ordinal_labels2)
 bank_features.drop(['marital'], axis=1,inplace=True)
@@ -196,25 +203,91 @@ print(bank_features.columns)
 
 
 #---------------------------------------------------------
-
 #we need to encode (jop , education , contact )
+
+
+contact_incoder = LabelEncoder()
+
+
+ 
+contact_values = contact_incoder.fit_transform(bank_features['contact'])
+
+print('contact before encoding ' , bank_features['contact'][:10])
+print('contact values after encoding ' , contact_values[:10])
+
+bank_features['new_contact'] = contact_values
+print(bank_features.columns)
+print(bank_features.head())
+bank_features.pop('contact')
+print('after droping contact')
+print(bank_features.columns)
+#---------------------------------------------------------------
+
+
+# handling education
+
+print(bank_features['education'].value_counts())
+print(bank_features['education'].unique)
+
+education_encoder = LabelEncoder()
+education_encoded = education_encoder.fit_transform(bank_features['education'])
+
+print('education after encoding ' , bank_features['education'][:20])
+print('education after encoding ' , education_encoded[:20])
+education_encoded_df = pd.DataFrame(education_encoded)
+print('education encoded value counts '  , education_encoded_df.value_counts() ) # 6 catigories
+bank_features['new_education'] = education_encoded
+bank_features.pop('education')
+print(bank_features.head())
+
+#education col handeled
+
+#----------------------------------------------------------------
+print(bank_features['job'].value_counts())
+print(bank_features['job'].unique())
+
+job_encoder = LabelEncoder()
+
+job_encoded = job_encoder.fit_transform(bank_features['job'])
+
+print('job after encoding ' , job_encoded[:20])
+
+bank_features['new_job'] = job_encoded
+
+bank_features.pop('job')
+print(bank_features.head(20))
+
+#--------------------------------------------------------------
+#handling poutcome 
+poutcome_encoder = LabelEncoder()
+
+poutcome_encoded = poutcome_encoder.fit_transform(bank_features['poutcome'])
+print(poutcome_encoded[:100])
+
+bank_features['new_poutcome'] = poutcome_encoded
+bank_features.pop('poutcome')
+print(bank_features.head(30))
+
+print(bank_features['new_poutcome'].value_counts() )
+
+
+
+
 
 #-----------------------------------------
 #scaling the features 
+#Standardization of numerical variables
 
-bank_scale=bank_features.copy()
+bank_features=bank_features.copy()
 
-Categorical_variables=['job', 'education', 'default', 'housing', 'loan', 'month','day_of_week','y', 'marital_ordinal']
+Categorical_variables=['new_job', 'new_education', 'default', 'housing', 'loan', 'month','day_of_week','y', 'marital_ordinal' , 'new_contact' ]
 
+print('col for bank scale \n' , bank_features.columns  )
+bank_features.pop('age_group')
 
-feature_scale=[feature for feature in bank_scale.columns if feature not in Categorical_variables]
-print(bank_scale.head())
-
-
-# features = ['job', 'education', 'default', 'housing', 'loan', 'month','day_of_week','y', 'marital_ordinal']
-# scaler=StandardScaler()
-# scaler.fit(bank_scale[feature_scale])
-# scaled_data = pd.concat([bank_scale[features].reset_index(drop=True),pd.DataFrame(scaler.transform(bank_scale[feature_scale]), columns=feature_scale)],axis=1)
-# print(scaled_data.head())
+feature_scale = [f for f in bank_features.columns if f not in Categorical_variables]
+print(bank_features[feature_scale].head(20))
+scaler=StandardScaler()
+scaler.fit(bank_features[feature_scale])
 
 
