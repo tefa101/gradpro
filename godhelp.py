@@ -90,7 +90,7 @@ f,ax=plt.subplots(figsize=(10,10))
 ax.set_title('Correlation plot of attributes')
 sns.heatmap(bank_csv.corr(),annot=True,linewidths=0.5,linecolor="black",fmt=".1f",ax=ax)
 plt.show()
-
+allfigs.savefig(ax.figure)
 #------------------------------------------------------
 
 ##move on to outliars
@@ -278,16 +278,17 @@ print(bank_features['new_poutcome'].value_counts() )
 #scaling the features 
 #Standardization of numerical variables
 
-bank_features=bank_features.copy()
+bank_scale=bank_features.copy()
 
 Categorical_variables=['new_job', 'new_education', 'default', 'housing', 'loan', 'month','day_of_week','y', 'marital_ordinal' , 'new_contact' ]
 
-print('col for bank scale \n' , bank_features.columns  )
-bank_features.pop('age_group')
+print('col for bank scale \n' , bank_scale.columns  )
+bank_scale.pop('age_group')
 
-feature_scale = [f for f in bank_features.columns if f not in Categorical_variables]
-print(bank_features[feature_scale].head(20))
+
 scaler=StandardScaler()
-scaler.fit(bank_features[feature_scale])
+scaled_data = pd.DataFrame(scaler.fit_transform(bank_scale), columns=bank_scale.columns)
 
+print(scaled_data.head(20))
+scaled_data.to_csv('scaled_data.csv' , encoding='UTF-8', index=False )
 
