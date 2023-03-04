@@ -65,6 +65,7 @@ nb_cv=BernoulliNB()
 cv_dict = {0: 'Logistic Regression', 1: 'Decision Tree',2:'KNN',3:'SVC',4:'Naive Bayes'}
 cv_models=[logreg_cv,dt_cv,knn_cv,svc_cv,nb_cv]
 
+# this takes a lot of time to run so i commented it out
 
 # for i,model in enumerate(cv_models):
 #     print("{} Test Accuracy: {}".format(cv_dict[i],cross_val_score(model, X, y, cv=10, scoring ='accuracy').mean()))
@@ -94,3 +95,17 @@ print('Accuracy of logistic regression classifier on test set: {:.2f}'.format(lo
 confusion_matrix = confusion_matrix(y_test, y_pred)
 print("Confusion Matrix:\n",confusion_matrix)
 print("Classification Report:\n",classification_report(y_test, y_pred))
+
+'''
+From the EDA and model selection part we can clearly identify duration playing an important attribute in defining the outcome of our dataset. 
+It is absolute that the more the leads are interested in starting a deposit will have higher number of calls and the call duration will be higher than the average. 
+We have also figured out that job and education also acts as a crucial deciding factor and influences the outcome alot.
+
+Here are the few recommendations for the bank than can help improve the deposit rate
+
+Classify job roles based on corporate tiers and approach all tier 1 employees extract more information to deliver the best deposit plan, 
+which can increase the duration of calls and that can lead to a deposit
+Approaching the leads during the start of new bank period(May-July) will be a good choice as many have shown positive results from data history
+Tune the campaign according to the national econometrics, don't chanelize the expenses on campaign when the national economy is performing poor
+
+'''
