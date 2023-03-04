@@ -277,18 +277,24 @@ print(bank_features['new_poutcome'].value_counts() )
 #-----------------------------------------
 #scaling the features 
 #Standardization of numerical variables
-
+bank_features.drop('age_group', axis=1, inplace=True)
 bank_scale=bank_features.copy()
 
 Categorical_variables=['new_job', 'new_education', 'default', 'housing', 'loan', 'month','day_of_week','y', 'marital_ordinal' , 'new_contact' ]
 
-print('col for bank scale \n' , bank_scale.columns  )
-bank_scale.pop('age_group')
+features_scale = [feature for feature in bank_scale.columns if feature not in Categorical_variables]
+
+print('col for bank scale \n' , bank_scale[features_scale].columns  )
+
+#bank_scale.pop('age_group')
 
 
 scaler=StandardScaler()
-scaled_data = pd.DataFrame(scaler.fit_transform(bank_scale), columns=bank_scale.columns)
+scaler.fit(bank_scale[features_scale])
+scaled_data = pd.concat([bank_scale[['new_job', 'new_education', 'default', 'housing', 'loan', 'month','day_of_week','y', 'marital_ordinal' , 'new_contact' ]].reset_index(drop=True),
+                         pd.DataFrame(scaler.transform(bank_scale[features_scale]),columns=features_scale)],axis=1)
 
 print(scaled_data.head(20))
+scaled_data.pop('conversion')
 scaled_data.to_csv('scaled_data.csv' , encoding='UTF-8', index=False )
 
