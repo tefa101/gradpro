@@ -112,3 +112,12 @@ Approaching the leads during the start of new bank period(May-July) will be a go
 Tune the campaign according to the national econometrics, don't chanelize the expenses on campaign when the national economy is performing poor
 
 '''
+
+'''
+Insights:
+
+The leads who have not made a deposit have lesser duration on calls
+Comparing the average, the blue collar, entrepreneur have high duration in calls and student, retired have less duration in average
+Large distribution of leads were from self employed clients and management people.
+
+'''
